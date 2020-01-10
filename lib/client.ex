@@ -5,26 +5,45 @@ defmodule Exinthegra.Client do
 
   use HTTPoison.Base
   
-  @host "https://api.inthegra.strans.teresina.pi.gov.br"
+  @api_root "https://api.inthegra.strans.teresina.pi.gov.br/v1"
 
-  defp env(key), do: Application.get_env(:exinthegra, key)
+  @riculus_format_date "{WDshort}, {D} {Mshort} {YYYY} {h24}:{m}:{s} GMT"
 
-  defp get_token, do: env(:token)
-
-  defp get_credentials do 
-    [
-      login: env(:login),
-      password: env(:password),
-      key: env(:key)
-    ]
+  defp env(key) do
+    env_key = key |> Atom.to_string |> String.upcase
+    Application.get_env(:exinthegra, key, System.get_env(env_key))
   end
 
-  defp process_url(path), do: @host <> path
+  defp get_token, do: "5d761a19-2fdb-4e05-b2b2-f136874c0beb"
+
+  defp get_key, do: "290d623503d3409596202256231431ad"
+
+  defp date, do: Timex.now |> Timex.format!(@riculus_format_date)
+
+  defp get_credentials do 
+    %{
+      email: env(:login),
+      password: env(:password)
+    }
+  end
+
+  @spec login :: {:error, any} | {:ok, any}
+  defp login do
+    "/sigin" 
+    |> post(get_credentials)
+    |> resp
+  end
+
+  defp process_url(path), do: @api_root <> path
 
   defp process_request_body(req), do: Poison.encode!(req)
 
   defp process_request_headers(headers) do
-		[{"Content-type", "application/json"}, {"Authorization", "Bearer #{get_token()}"}] ++ headers
+    [{"Content-type", "application/json"},
+     {"Date", date()},
+     {"X-Auth-Token", get_token()},
+     {"X-Api-Key", get_key()}
+    ] ++ headers
 	end
 
   @doc """

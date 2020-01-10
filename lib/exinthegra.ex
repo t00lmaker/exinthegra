@@ -2,7 +2,7 @@ defmodule Exinthegra do
   @moduledoc """
     Elixir wrapper para a Api Strans Inthegra.  
   """
-  import Exinthegra.Client, only: [get: 1, post: 2, resp: 1]
+  import Exinthegra.Client, only: [get: 1, resp: 1]
   @doc """
   Hello world.
 
@@ -22,6 +22,5 @@ defmodule Exinthegra do
   def call(:paradas, search), do: get("/paradas?busca=#{search}") |> resp
   def call(:veiculos_linhas, search), do: get("/veiculosLinha?busca=#{search}") |> resp
   def call(:paradas_linhas, search), do: get("/paradasLinha?busca=#{search}") |> resp
-  def call(:signin, params), do: post("/sigin", params) |> resp 
   def call(_, _), do: raise "Action notfound!"
 end
