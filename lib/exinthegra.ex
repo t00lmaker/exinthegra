@@ -1,19 +1,14 @@
 defmodule Exinthegra do
   @moduledoc """
-    Elixir wrapper para a Api Strans Inthegra.  
+    Elixir wrapper para a Api Strans Inthegra.
   """
   import Exinthegra.Client, only: [get: 1, resp: 1]
+
   @doc """
   Hello world.
-
-  ## Examples
-
-      iex> Exinthegra.hello()
-      :world
-
   """
   @spec call(:veiculos | :linhas | :paradas | :signin) :: {:error, binary} | {:ok, binary}
-  def call(:veiculos), do: get("/veiculos") |> resp 
+  def call(:veiculos), do: get("/veiculos") |> resp
   def call(:linhas), do: get("/linhas") |> resp
   def call(:paradas), do: get("/paradas") |> resp
 
